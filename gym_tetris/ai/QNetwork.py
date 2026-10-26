@@ -6,7 +6,8 @@ import random
 import numpy as np
 import tensorflow as tf
 
-WEIGHT_PATH = os.path.join(os.path.dirname(__file__), 'weights.h5')
+WEIGHT_PATH = os.path.join(os.path.dirname(__file__), 'weights.weights.h5')
+LEGACY_WEIGHT_PATH = os.path.join(os.path.dirname(__file__), 'weights.h5')
 IMAGE_PATH = os.path.join(os.path.dirname(__file__), 'model.png')
 LOG_DIR = os.path.join(os.path.dirname(__file__), 'logs')
 
@@ -125,6 +126,8 @@ class QNetwork:
         """Load the weights."""
         if Path(WEIGHT_PATH).is_file():
             self.model.load_weights(WEIGHT_PATH)
+        elif Path(LEGACY_WEIGHT_PATH).is_file():
+            self.model.load_weights(LEGACY_WEIGHT_PATH)
 
     def save(self):
         """Save the weights."""
