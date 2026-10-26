@@ -82,16 +82,19 @@ if __name__ == "__main__":
 
     ppo_config = (
         PPOConfig()
-        # .experimental(_enable_new_api_stack=False)
+        .api_stack(
+            enable_rl_module_and_learner=False,
+            enable_env_runner_and_connector_v2=False,
+        )
         .environment("TetrisSingleEnv")
         .framework(args.framework)
         # disable filters, otherwise we would need to synchronize those
         # as well to the DQN agent
-        .rollouts(observation_filter="MeanStdFilter")
+        .env_runners(observation_filter="MeanStdFilter")
         .training(
             model={"vf_share_layers": True},
             vf_loss_coeff=0.01,
-            num_sgd_iter=6,
+            num_epochs=6,
         )
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         .resources(num_gpus=int(os.environ.get("RLLIB_NUM_GPUS", "0")))
@@ -99,11 +102,15 @@ if __name__ == "__main__":
 
     dqn_config = (
         DQNConfig()
+        .api_stack(
+            enable_rl_module_and_learner=False,
+            enable_env_runner_and_connector_v2=False,
+        )
         .environment("TetrisSingleEnv")
         .framework(args.framework)
         # disable filters, otherwise we would need to synchronize those
         # as well to the DQN agent
-        .rollouts(observation_filter="MeanStdFilter")
+        .env_runners(observation_filter="MeanStdFilter")
         .training(
             model={"vf_share_layers": True},
             n_step=3,
